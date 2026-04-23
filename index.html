@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gym Assistant</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- <style>
+
+    </style> -->
+</head>
+
+<body>
+    <h1>💪 Gym Assistant</h1>
+
+    <div class="nav">
+        <button onclick="showSection('diet')">
+            <div class="icon">🥗</div>Diet Plan
+        </button>
+        <button onclick="showSection('workoutPlan')">
+            <div class="icon">📅</div>Workout Plan
+        </button>
+        <button onclick="showSection('variations')">
+            <div class="icon">🏋️</div>Variations
+        </button>
+        <button onclick="showSection('timer')">
+            <div class="icon">⏱</div>Timer
+        </button>
+    </div>
+
+    <!-- Diet -->
+    <div id="diet" class="section">
+        <div class="card">
+            <div class="diet-header">
+                <h2>🥗 <span>Diet Plan</span></h2>
+                <div class="protein-wrap">
+                    Protein Goal:&nbsp;
+                    <input id="proteinGoal" type="text" placeholder="e.g. 120" />
+                </div>
+            </div>
+
+            <div class="controls">
+                <label style="display:block; margin-bottom:6px;">Select Day:</label>
+                <select id="dietDaySelect">
+                    <option value="">-- Choose Day --</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                    <option>Sunday</option>
+                </select>
+            </div>
+
+            <!-- Inputs (hidden if saved already) -->
+            <div id="mealInputs" style="display:none;">
+                <input id="breakfastInput" type="text" placeholder="Breakfast" />
+                <input id="lunchInput" type="text" placeholder="Lunch" />
+                <input id="dinnerInput" type="text" placeholder="Dinner" />
+                <input id="snacksInput" type="text" placeholder="Snacks" />
+            </div>
+
+            <!-- Buttons inside the card (only Save stays here) -->
+            <div class="action-buttons" id="actionButtons" style="display:none;">
+                <button id="saveDietBtn" class="saveBtn">💾 Save Diet</button>
+            </div>
+
+            <h3 id="selectedDayTitle" style="margin-top:18px;"></h3>
+            <ul id="dietList"></ul>
+        </div>
+
+        <!-- ✅ Edit button inside #diet, but outside the card -->
+        <div style="display:flex; justify-content:center; margin-top:10px;">
+            <button id="editDietBtn" class="editBtn" style="display:none;">✏️ Edit Diet</button>
+        </div>
+    </div>
+
+
+    <!-- Workout Plan -->
+    <div id="workoutPlan" class="section card">
+        <h2>📅 Weekly Workout Plan</h2>
+        <select id="daySelect">
+            <option value="">-- Choose Day --</option> <!-- 🔹 Default empty option -->
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+        </select>
+        <input type="text" id="workoutInput" placeholder="Enter workout" />
+        <button onclick="addWorkout()">Add</button>
+        <h3 id="todayTitle"></h3>
+        <ul id="workoutList"></ul>
+    </div>
+
+    <!-- Variations -->
+    <div id="variations" class="section card">
+        <h2>🏋️ Workout Variations</h2>
+
+        <!-- Category Boxes -->
+        <div id="categoryBoxes" class="category-boxes">
+            <div class="category" data-cat="Chest">Chest</div>
+            <div class="category" data-cat="Triceps">Triceps</div>
+            <div class="category" data-cat="Biceps">Biceps</div>
+            <div class="category" data-cat="Back">Back</div>
+            <div class="category" data-cat="Legs">Legs</div>
+            <div class="category" data-cat="Shoulders">Shoulders</div>
+            <div class="category" data-cat="Core">Core</div>
+        </div>
+
+        <!-- Category detail view -->
+        <div id="categoryDetail" style="display:none;">
+            <button id="backToCategories">⬅ Back</button>
+            <h3 id="selectedCategoryTitle"></h3>
+
+            <!-- List of variations for this category -->
+            <div id="variationsList"></div>
+
+            <!-- Add button -->
+            <button id="showAddFormBtn" style="margin-top:12px;">➕ Add Exercise</button>
+
+            <!-- Form to add new variation (hidden initially) -->
+            <div id="addVariationForm" class="variation-form" style="display:none; margin-top:15px;">
+                <input type="text" id="variationName" placeholder="Exercise Name" />
+                <input type="text" id="variationImage" placeholder="Image URL" />
+                <input type="text" id="variationVideo" placeholder="Video URL (YouTube embed link)" />
+                <input type="text" id="variationLink" placeholder="Related link (Instagram/YouTube)" />
+                <button id="addVariationBtn">💾 Save Exercise</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Timer -->
+    <div id="timer" class="section card">
+        <h2>⏱ Gym Timer</h2>
+
+        <!-- Voice Timer (Desktop only) -->
+        <div id="voiceTimerUI">
+            <p id="status">Click "Start Voice Timer" and say: e.g. "2 minutes 30 seconds"</p>
+            <button id="startMicBtn" onclick="startVoiceTimer()">🎤 Start Voice Timer</button>
+            <button id="resetBtn" onclick="resetTimer()" style="display:none;">⏹ Reset</button>
+            <div id="timerDisplay">00:00</div>
+        </div>
+
+        <!-- Manual Timer (Mobile only) -->
+        <div id="manualTimerUI" style="display:none;">
+            <input type="number" id="manualMinutes" placeholder="Minutes" min="0" style="width:80px;padding:6px;">
+            <input type="number" id="manualSeconds" placeholder="Seconds" min="0" max="59"
+                style="width:80px;padding:6px;">
+            <button id="manualStartBtn" onclick="startManualTimer()">▶ Start Timer</button>
+            <div id="timerDisplayManual">00:00</div>
+        </div>
+    </div>
+
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>
